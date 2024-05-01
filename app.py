@@ -11,7 +11,8 @@ import json
 
 app = Flask(__name__)
 CORS(app)
-imgs_folder = 'imgs'  # 图片保存的文件夹路径
+imgs_folder = 'imgs'  # 历史图片保存的文件夹路径
+imgs_like_folder = 'like' # 喜欢的图片保存的文件夹路径
 
 @app.route('/history')
 def get_history_images():
@@ -27,25 +28,20 @@ def get_history_images():
 
     return jsonify(images)
 
-# 定义生成图片的路由
-@app.route('/generate', methods=['GET'])
-def generate_image():
-    try:
-        # 使用 subprocess 调用 generate.py 文件
-        subprocess.run(['python', 'generate.py'])
 
-        # 读取生成的图片并转换为 Base64 编码
-        result_path = 'result/result666.png'  # 生成的图片路径
-        with open(result_path, 'rb') as f:
-            img_data = f.read()
+@app.route('/like')
+def get_like_images():
+    images = []
+    
+    # 遍历imgs文件夹下的所有图片文件
+    for filename in os.listdir(imgs_like_folder):
+        if filename.endswith('.png'):  # 假设图片格式为png，根据实际情况修改
+            with open(os.path.join(imgs_like_folder, filename), 'rb') as f:
+                img_data = f.read()
             img_base64 = base64.b64encode(img_data).decode('utf-8')
+            images.append({'filename': filename, 'base64': img_base64})
 
-        # 返回生成的图片的 Base64 编码给前端
-        return jsonify({'message': 'Image generated successfully', 'image_base64': img_base64})
-    except Exception as e:
-        return jsonify({'message': f'Error generating image: {str(e)}'})
-
-
+    return jsonify(images)
 
 
 @app.route('/switch-model', methods=['POST'])
@@ -103,13 +99,6 @@ def update_config():
 
 
 
-# 提供已生成图片的路由
-@app.route('/generated-images', methods=['GET'])
-def get_generated_images():
-    image_folder = 'generated_images'
-    image_paths = [os.path.join(image_folder, image_name) for image_name in os.listdir(image_folder)]
-    return jsonify({'image_paths': image_paths})
-
 
 @app.route('/clear-history', methods=['DELETE'])
 def clear_history():
@@ -126,7 +115,37 @@ def clear_history():
     clear_imgs_folder()  # 调用清空imgs文件夹的函数
     return 'History images cleared successfully'
 
+@app.route('/clear-like', methods=['DELETE'])
+def clear_like():
+    def clear_imgs_like_folder():
+        # 删除imgs文件夹中的所有文件
+        for filename in os.listdir(imgs_like_folder):
+            file_path = os.path.join(imgs_like_folder, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
 
+    clear_imgs_like_folder()  # 调用清空imgs文件夹的函数
+    return 'History images cleared successfully'
+
+@app.route('/copy-file', methods=['POST'])
+def copy_file():
+    try:
+        # 执行文件复制操作
+         # 获取已存在的图片序号
+        existing_files = os.listdir(imgs_like_folder)
+        num_existing_files = len(existing_files)
+        
+        # 生成新文件名
+        new_file_name = os.path.join(imgs_like_folder, f'result_{num_existing_files + 1}.png')
+        
+        # 复制图像文件
+        shutil.copy('result/result.png', new_file_name)
+        return 'File copied successfully', 200
+    except Exception as e:
+        return str(e), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

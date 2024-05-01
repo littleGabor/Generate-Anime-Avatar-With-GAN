@@ -11,14 +11,8 @@ class Config(object):
     nz = 100  # 噪声维度
     ngf = 64  # 生成器feature map数
     ndf = 64  # 判别器feature map数
-
     save_path = 'imgs/'  # 生成图片保存路径
-
-    vis = False  # 是否使用visdom可视化
-    env = 'GAN'  # visdom的env
-    plot_every = 20  # 每间隔20 batch，visdom画图一次
-
-    debug_file = '/tmp/debuggan'  # 存在该文件则进入debug模式
+   # debug_file = '/tmp/debuggan'  # 存在该文件则进入debug模式
     d_every = 1  # 每1个batch训练一次判别器
     g_every = 2  # 每2个batch训练一次生成器
     save_every = 10  # 每10个epoch保存一次模型

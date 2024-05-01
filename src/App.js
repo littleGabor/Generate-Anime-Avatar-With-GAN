@@ -7,14 +7,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import History from './History';
 import UpdateConfigComponent from './UpdateConfigComponent';
+import Like from "./Like";
 
 
 const { Header, Content, Footer } = Layout;
 const items = [
-    { key: 1, label: 'Home', url: '/' },
-    { key: 2, label: 'History', url: '/history' },
-    { key: 3, label: 'Services', url: '/services' },
-    { key: 4, label: 'Contact', url: '/contact' }
+    { key: 1, label: '主页', url: '/' },
+    { key: 2, label: '历史图片', url: '/history' },
+    { key: 3, label: '我喜欢的图片', url: '/like' },
+    
   ];
 
 function App() {
@@ -55,12 +56,14 @@ function App() {
             >
             <Breadcrumb
                 style={{
-                margin: '16px 0',
+                margin: '30px 0',
                 }}
+                items={[
+                    { }
+                ]}
             >
-                <Breadcrumb.Item>Home</Breadcrumb.Item>
-                <Breadcrumb.Item>List</Breadcrumb.Item>
-                <Breadcrumb.Item>App</Breadcrumb.Item>
+               
+                
             </Breadcrumb>
             <div
                 style={{
@@ -74,6 +77,7 @@ function App() {
                 <Routes>
                 <Route path="/" element={<UpdateConfigComponent />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/like" element={<Like />} />
                 </Routes>
             
             </div>
