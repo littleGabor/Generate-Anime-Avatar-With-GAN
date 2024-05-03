@@ -1,6 +1,6 @@
 # coding:utf8
 from torch import nn
-
+from config import opt
 
 class NetG(nn.Module):
     """

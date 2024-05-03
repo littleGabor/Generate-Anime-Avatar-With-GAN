@@ -44,26 +44,6 @@ def get_like_images():
     return jsonify(images)
 
 
-@app.route('/switch-model', methods=['POST'])
-def switch_model():
-    data = request.get_json()
-    model_name = data.get('model_name')
-
-    # 根据选择的模型名称更新 netd_path 和 netg_path
-    if model_name == '1':
-        opt.netd_path = 'path_to_model_1'
-        opt.netg_path = 'path_to_model_1'
-    elif model_name == '2':
-        opt.netd_path = 'path_to_model_2'
-        opt.netg_path = 'path_to_model_2'
-    # 添加更多的模型选择
-
-    # 返回成功消息
-    return jsonify({'message': 'Model switched successfully'}), 200
-
-
-
-
 @app.route('/update-config', methods=['POST'])
 def update_config():
     try:
